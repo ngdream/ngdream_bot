@@ -1,0 +1,15 @@
+{
+  "name": "ossmanager",
+  "version": "1.0.0",
+  "description": "a bot for oss",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ngdream",
+  "license": "MIT",
+  "dependencies": {
+    "netlify-lambda": "^2.0.15",
+    "telegraf": "^4.11.2"
+  }
+}
