@@ -1,7 +1,11 @@
-const { Telegraf ,Markup } = require("telegraf")
+const { Telegraf, Markup ,Scenes,session} = require("telegraf")
+const sqlite3 = require('sqlite3').verbose();
 
+// Handler factories
+const { enter, leave } = Scenes.Stage;
 
 const bot = new Telegraf("5853131511:AAGkSPGXdb-E1bhEWoKf5AuiDQFdcSrCDZw");
+
 
 
 HELPTEXT = `
@@ -22,24 +26,47 @@ You can donate on PayPal (https://paypal.me/PaulSonOfLars), or you can set up a 
 This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!
 `
 
+PM_START_TEXT =
+`Hey there! My name is kiki, I'm here to help you manage your groups! Hit /help to find out more about how to use me to my full potential.
+Join my [news channel](https://t.me/ngdreamnew) to get information on all the latest updates.`
+
+
+
+// open the database
+let db = new sqlite3.Database('./data.db', sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Connected to  database.');
+  });
+  
+  db.serialize(() => {
+      db.each(`CREATE TABLE IF NOT EXISTS PROJECT
+     (url varchar(200) null);
+  
+    `, (err, row) => {
+  
+    });
+  });
+  
+
+  const startmakup = Markup.inlineKeyboard([
+    Markup.button.url("contribute to the project", "https://github.com/ngdream/ngdream_bot"),
+    Markup.button.url("join ngcodex community", "https://t.me/ngcodex"),
+
+]);
 
 
 bot.start(ctx => {
     try {
     
-      return ctx.replyWithMarkdownV2("*ngdream* helps you better participate in the opensource project and manage yours",startmakup)
+      return ctx.replyWithMarkdown(PM_START_TEXT,startmakup)
     } catch (e) {
       console.error("error in start action:", e)
         return ctx.reply("Error occured")
         
     }
 })
-const startmakup = Markup.inlineKeyboard([
-    Markup.button.url("contribute to the project", "https://github.com/ngdream/ngdream_bot"),
-    Markup.button.url("join ngcodex community", "https://github.com/ngdream/ngdream_bot"),
-
-
-]);
 
 
 
@@ -65,6 +92,27 @@ bot.command("donate", ctx =>
         return ctx.reply("Error occured")
         
     }
+})
+
+
+bot.command("add", ctx =>
+{
+    try {
+    
+        let email;
+        let password;
+        
+        //Something like this
+        ctx.reply("Enter your email");
+        email = ctx.message?.text;
+    
+        ctx.reply("Enter your password");
+        password = ctx.message?.text;
+    } catch (e) {
+      console.error("error in add action:", e)
+        return ctx.reply("Error occured")
+        
+    }
 } )
 
 bot.on("message", ctx => 
@@ -75,6 +123,8 @@ bot.on("message", ctx =>
     
 
 });
+
+
   
   // AWS event handler syntax (https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html)
   exports.handler = async event => {
@@ -87,4 +137,5 @@ bot.on("message", ctx =>
     }
   }
 
-//bot.launch()
+
+
