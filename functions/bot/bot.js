@@ -1,5 +1,5 @@
 const { Telegraf, Markup ,Scenes,session} = require("telegraf")
-const sqlite3 = require('sqlite3').verbose();
+
 
 // Handler factories
 const { enter, leave } = Scenes.Stage;
@@ -32,22 +32,7 @@ Join my [news channel](https://t.me/ngdreamnew) to get information on all the la
 
 
 
-// open the database
-let db = new sqlite3.Database('./data.db', sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log('Connected to  database.');
-  });
-  
-  db.serialize(() => {
-      db.each(`CREATE TABLE IF NOT EXISTS PROJECT
-     (url varchar(200) null);
-  
-    `, (err, row) => {
-  
-    });
-  });
+
   
 
   const startmakup = Markup.inlineKeyboard([
