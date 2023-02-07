@@ -176,10 +176,10 @@ bot.command("share", ctx =>
             });
           })
         }
-   
+        ctx.reply("le fichier sera envoyé sous peu")
   
       })
-  return ctx.reply("le fichier sera envoyé sous peu")
+
     
     } catch (e) {
       console.error("error in add action:", e)
