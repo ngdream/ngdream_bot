@@ -11,27 +11,34 @@ const octokit = new Octokit({
 
 async function fetchdata(urlE)
 {
-  var urldata=gh(urlE);
-  let path = ""
-  if (!urldata.type)
-  {
-    if (urldata.path !== urldata.repo)
+    try
     {
-    path = urldata.path
-    path = path.substring(path.indexOf(urldata.branch))
-    path=path.substring(path.indexOf("/")+1)
-      }
-
+        var urldata = gh(urlE);
+        let path = ""
+        if (!urldata.type) {
+            if (urldata.path !== urldata.repo) {
+                path = urldata.path
+                path = path.substring(path.indexOf(urldata.branch))
+                path = path.substring(path.indexOf("/") + 1)
+            }
+        }
+        const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: urldata.owner,
+            repo: urldata.name,
+            path: (urldata.type)?urldata.filepath:path
+          })
+          return data
     }
+    catch (e)
+    {
+        throw urlE+ " its not  valid github url"
+        
+        }
 
     
-  const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-    owner: urldata.owner,
-    repo: urldata.name,
-    path: (urldata.type)?urldata.filepath:path
-  })
-  return data
+
 }
+
 
 async function makezip(zip,part)
 {

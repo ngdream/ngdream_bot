@@ -95,31 +95,40 @@ bot.command("share", async (ctx) => {
     return ctx.reply('Missing parameter');
         
   }
-  const data = await fetchdata(param)
-  ctx.reply("a file will be send at soon ")
-  if (data.type) {
-
-    ctx.sendDocument(
-      {
-        source: Buffer.from(data.content, "base64"),
-        filename: data.name
-              
-      }).catch(e => console.log(e))
-  }
-  else {
-
-    zip = new Jszip()
-    await makezip(zip, data)
-    content = await zip.generateAsync({ type: "nodebuffer" })
-    ctx.sendDocument(
-      {
-        source: content,
-        filename: param + ".zip"
-        
-      }).catch(e => console.log(e))
-  }
+  try
+  {
+    const data = await fetchdata(param)
+    ctx.reply("a file will be send at soon ")
+    if (data.type) {
+  
+      ctx.sendDocument(
+        {
+          source: Buffer.from(data.content, "base64"),
+          filename: data.name
+                
+        }).catch(e => console.log(e))
+    }
+    else {
+  
+      zip = new Jszip()
+      await makezip(zip, data)
+      content = await zip.generateAsync({ type: "nodebuffer" })
+      ctx.sendDocument(
+        {
+          source: content,
+          filename: param + ".zip"
           
-  console.log("file is sent")
+        }).catch(e => console.log(e))
+    }
+            
+    console.log("file is sent")
+  }
+  catch (e)
+  {
+    console.log(e)
+    ctx.reply(e)
+  }
+
 })          
      
     
