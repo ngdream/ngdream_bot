@@ -165,23 +165,22 @@ bot.command("share", async (ctx) => {
   else {
 
     zip = new Jszip()
-    makezip(zip, data).then(() => {
-      zip.generateAsync({ type: "nodebuffer" }).then(function (content) {
-        // see FileSaver.js
-        ctx.sendDocument(
-          {
-            source: content,
-            filename: param + ".zip"
+    await makezip(zip, data)
+    content = await zip.generateAsync({ type: "nodebuffer" })
+    ctx.sendDocument(
+      {
+        source: content,
+        filename: param + ".zip"
         
-          }).catch(e => console.log(e))
-          
-        console.log("fichier envoyé")
-           
-      })
-    })
-
+      }).catch(e => console.log(e))
   }
-})
+          
+  console.log("fichier envoyé")
+})          
+     
+    
+
+
 
 console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV == 'development')
