@@ -73,17 +73,17 @@ HELPTEXT = `
 Hey! My name is ngdream. I am a group management bot, here to help you manage you opensource project and promote it!
 I have lots of handy features
 *Helpful commands*:
-- /start: Starts me! You've probably already used this.
+- /start: Starts me! You've probably already used this .
 - /help: Sends this message; I'll tell you more about myself!
 - /donate: Gives you info on how to support me and my creator.
-- /add : add a new project
-- /discover : discover a new opensource project
+- /share <your url> : can clone a repository or a subdirectory
+- /connect : connect ayour group to github account
 
 All commands can be used with the following: / !`
 
 DONATETEXT = `
 So you want to donate? Amazing!
-You can donate on PayPal (https://paypal.me/PaulSonOfLars), or you can set up a recurring donation on GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
+You can donate on PayPal (https://paypal.me/), or you can set up a recurring donation on GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
 This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!
 `
 
