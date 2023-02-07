@@ -6,7 +6,9 @@ require('dotenv').config()
 const Jszip = require('jszip')
 const {fetchdata,makezip}=require('./functions')
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const bot = new Telegraf(process.env.BOT_TOKEN,{
+  polling: true,
+});
 
 
 
