@@ -191,7 +191,7 @@ bot.command("share", ctx =>
 
 
 
-bot.launch()
+
   
   if(process.env.NODE_ENV !== 'production')
   exports.handler = async event => {
@@ -203,6 +203,7 @@ bot.launch()
       return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
     }
   }
-
+  else
+  bot.launch()
 
 
