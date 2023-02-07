@@ -2,68 +2,9 @@ const { Telegraf, Markup ,Scenes,session} = require("telegraf")
 require('dotenv').config()
 
 
-const { Octokit } =require("octokit")
+
 const Jszip = require('jszip')
-var gh = require('parse-github-url');
-
-
-
-const octokit = new Octokit({
-
-  auth:process.env.GITHUB_TOKEN
-
-})
-
-
-octokit.auth().then((value) => { console.log(value) })
-
-async function f(urlE)
-{
-  var urldata=gh(urlE);
-  let path = ""
-  if (!urldata.type)
-  {
-    if (urldata.path !== urldata.repo)
-    {
-    path = urldata.path
-    console.log(urldata.branch)
-    path = path.substring(path.indexOf(urldata.branch))
-    path=path.substring(path.indexOf("/")+1)
-      }
-
-    }
-
-    
-  const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-    owner: urldata.owner,
-    repo: urldata.name,
-    path: (urldata.type)?urldata.filepath:path
-  })
-  return data
-}
-
-async function makezip(zip,part)
-{
-  for (const p of part)
-  {
-
-    if (p.type === "file")
-    {
-      console.log(p.content)
-      var filedata= await f(p.html_url)
-      let decoded = Buffer.from(filedata.content, 'base64')
-      zip.file(p.name, decoded);
-    }
-    else
-    {
-      var newfolder = zip.folder(p.name);
-      var folderdata= await f(p.html_url)
-      await makezip(newfolder,folderdata)
-    }
-
-    }
-}
-
+const {fetchdata,makezip}=require('./functions')
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -83,7 +24,7 @@ All commands can be used with the following: / !`
 
 DONATETEXT = `
 So you want to donate? Amazing!
-You can donate on PayPal (https://paypal.me/), or you can set up a recurring donation on GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
+You can donate on PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C), or you can set up a recurring donation on GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
 This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!
 `
 
@@ -96,13 +37,14 @@ Join my [news channel](https://t.me/ngdreamnew) to get information on all the la
 
   
 
-  const startmakup = Markup.inlineKeyboard([
+const startmakup = Markup.inlineKeyboard([
     Markup.button.url("contribute to the project", "https://github.com/ngdream/ngdream_bot"),
     Markup.button.url("join ngcodex community", "https://t.me/ngcodex"),
 
 ]);
 
 
+//handle start command
 bot.start(ctx => {
     try {
     
@@ -115,7 +57,7 @@ bot.start(ctx => {
 })
 
 
-
+// handle help command
 bot.help(ctx => {
 
     try {
@@ -128,6 +70,7 @@ bot.help(ctx => {
     }
 });
 
+//handle donate command
 bot.command("donate", ctx =>
 {
     try {
@@ -141,6 +84,7 @@ bot.command("donate", ctx =>
 })
 
 
+//handle share command
 bot.command("share", async (ctx) => {
 
     
@@ -151,7 +95,7 @@ bot.command("share", async (ctx) => {
     return ctx.reply('Missing parameter');
         
   }
-  const data = await f(param)
+  const data = await fetchdata(param)
   ctx.reply("a file will be send at soon ")
   if (data.type) {
 
@@ -179,10 +123,7 @@ bot.command("share", async (ctx) => {
 })          
      
     
-
-
-
-console.log(process.env.NODE_ENV)
+//start bot
 if (process.env.NODE_ENV == 'development')
 {
   console.log('bot launched on production')
