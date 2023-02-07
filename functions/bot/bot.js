@@ -141,60 +141,47 @@ bot.command("donate", ctx =>
 })
 
 
-bot.command("share", ctx =>
-{
-    try {
+bot.command("share", async (ctx) => {
+
     
   const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
 
-      if (!param)
-      {
-        console.log("missing parameter")
-        return ctx.reply('Missing parameter');
+  if (!param) {
+    console.log("missing parameter")
+    return ctx.reply('Missing parameter');
         
-        }
- 
-      f(param).then((data) =>
-      { ctx.reply("le fichier sera envoyé sous peu")
-        if (data.type)
-        {
+  }
+  const data = await f(param)
+  ctx.reply("le fichier sera envoyé sous peu")
+  if (data.type) {
 
-          ctx.sendDocument(
-            {
-              source:Buffer.from(data.content, "base64"),
-              filename: data.name
-              
-            }).catch(e=>console.log(e))
-        }
-        else
-        {
-
-          zip = new Jszip()
-          makezip(zip, data).then(() => {
-            zip.generateAsync({type:"nodebuffer"}).then(function(content) {
-    // see FileSaver.js
     ctx.sendDocument(
       {
-        source:content,
-        filename: param+".zip"
-        
-      }).catch(e=>console.log(e))
-            });
-          })
-        }
-       
-  console.log("fichier envoyé")
-      },
-      (e)=>{console.log(e)})
+        source: Buffer.from(data.content, "base64"),
+        filename: data.name
+              
+      }).catch(e => console.log(e))
+  }
+  else {
 
-    
-    } catch (e) {
-      console.error("error in share action:", e)
-        return ctx.reply("Error occured")
+    zip = new Jszip()
+    makezip(zip, data).then(() => {
+      zip.generateAsync({ type: "nodebuffer" }).then(function (content) {
+        // see FileSaver.js
+        ctx.sendDocument(
+          {
+            source: content,
+            filename: param + ".zip"
         
-    }
-} )
+          }).catch(e => console.log(e))
+          
+        console.log("fichier envoyé")
+           
+      })
+    })
 
+  }
+})
 
 console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV == 'development')
@@ -216,6 +203,3 @@ else
   console.log('bot launched')
    bot.launch()
   }
- 
-
-
