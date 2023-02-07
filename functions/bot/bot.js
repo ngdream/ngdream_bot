@@ -190,10 +190,8 @@ bot.command("share", ctx =>
 } )
 
 
-
-
-  
-  if(process.env.NODE_ENV == 'production')
+console.log(process.env.NODE_ENV)
+  if(process.env.NODE_ENV == 'development')
   exports.handler = async event => {
     try {
       await bot.handleUpdate(JSON.parse(event.body))
