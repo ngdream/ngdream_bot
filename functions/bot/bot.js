@@ -152,11 +152,10 @@ bot.command("share", ctx =>
       {
         if (data.type)
         {
-          
-          console.log(data.content)
+
           ctx.sendDocument(
             {
-              source: new Buffer(data.content, "base64"),
+              source:Buffer.from(data.content, "base64"),
               filename: data.name
               
             }).catch(e=>console.log(e))
@@ -173,7 +172,7 @@ bot.command("share", ctx =>
         source:content,
         filename: param+".zip"
         
-      })
+      }).catch(e=>console.log(e))
             });
           })
         }
