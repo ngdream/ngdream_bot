@@ -149,7 +149,7 @@ bot.command("share", ctx =>
 
       if (!param) return ctx.reply('Missing param');
       f(param).then((data) =>
-      {
+      { ctx.reply("le fichier sera envoyé sous peu")
         if (data.type)
         {
 
@@ -176,7 +176,7 @@ bot.command("share", ctx =>
             });
           })
         }
-        ctx.reply("le fichier sera envoyé sous peu")
+       
   console.log("fichier envoyé")
       },
       (e)=>{console.log(e)})
