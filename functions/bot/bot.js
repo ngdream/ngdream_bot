@@ -1,5 +1,5 @@
 const { Telegraf, Markup ,Scenes,session} = require("telegraf")
-//require('dotenv').config()
+require('dotenv').config()
 
 
 const { Octokit } =require("octokit")
@@ -51,7 +51,7 @@ async function makezip(zip,part)
     {
       console.log(p.content)
       var filedata= await f(p.html_url)
-      let decoded = atob(filedata.content)
+      let decoded = Buffer.from(filedata.content, 'base64').toString('utf-8')
       zip.file(p.name, decoded);
     }
     else
