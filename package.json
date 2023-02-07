@@ -9,7 +9,11 @@
   "author": "ngdream",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.0.3",
+    "jszip": "^3.10.1",
     "netlify-lambda": "^2.0.15",
+    "octokit": "^2.0.14",
+    "parse-github-url": "^1.0.2",
     "telegraf": "^4.11.2"
   }
 }

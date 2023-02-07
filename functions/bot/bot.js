@@ -1,8 +1,69 @@
 const { Telegraf, Markup ,Scenes,session} = require("telegraf")
+require('dotenv').config()
 
 
-// Handler factories
-const { enter, leave } = Scenes.Stage;
+const { Octokit } =require("octokit")
+const Jszip = require('jszip')
+var gh = require('parse-github-url');
+
+
+
+const octokit = new Octokit({
+
+  auth:process.env.GITHUB_TOKEN
+
+})
+
+
+octokit.auth().then((value) => { console.log(value) })
+
+async function f(urlE)
+{
+  var urldata=gh(urlE);
+  let path = ""
+  if (!urldata.type)
+  {
+    if (urldata.path !== urldata.repo)
+    {
+    path = urldata.path
+    console.log(urldata.branch)
+    path = path.substring(path.indexOf(urldata.branch))
+    path=path.substring(path.indexOf("/")+1)
+      }
+
+    }
+
+    
+  const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+    owner: urldata.owner,
+    repo: urldata.name,
+    path: (urldata.type)?urldata.filepath:path
+  })
+  return data
+}
+
+async function makezip(zip,part)
+{
+  for (const p of part)
+  {
+
+    if (p.type === "file")
+    {
+      console.log(p.content)
+      var filedata= await f(p.html_url)
+      let decoded = atob(filedata.content)
+      zip.file(p.name, decoded);
+    }
+    else
+    {
+      var newfolder = zip.folder(p.name);
+      var folderdata= await f(p.html_url)
+      await makezip(newfolder,folderdata)
+    }
+
+    }
+}
+
 
 const bot = new Telegraf("5853131511:AAGkSPGXdb-E1bhEWoKf5AuiDQFdcSrCDZw");
 
@@ -80,19 +141,47 @@ bot.command("donate", ctx =>
 })
 
 
-bot.command("add", ctx =>
+bot.command("share", ctx =>
 {
     try {
     
-        let email;
-        let password;
+  const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+
+      if (!param) return ctx.reply('Missing param');
+      f(param).then((data) =>
+      {
+        if (data.type)
+        {
+          
+          console.log(data.content)
+          ctx.sendDocument(
+            {
+              source: new Buffer(data.content, "base64"),
+              filename: data.name
+              
+            })
+        }
+        else
+        {
+
+          zip = new Jszip()
+          makezip(zip, data).then(() => {
+            zip.generateAsync({type:"nodebuffer"}).then(function(content) {
+    // see FileSaver.js
+    ctx.sendDocument(
+      {
+        source:content,
+        filename: param+".zip"
         
-        //Something like this
-        ctx.reply("Enter your email");
-        email = ctx.message?.text;
+      })
+            });
+          })
+        }
+   
+  
+      })
+  return ctx.reply("le fichier sera envoyé sous peu")
     
-        ctx.reply("Enter your password");
-        password = ctx.message?.text;
     } catch (e) {
       console.error("error in add action:", e)
         return ctx.reply("Error occured")
@@ -100,27 +189,20 @@ bot.command("add", ctx =>
     }
 } )
 
-bot.on("message", ctx => 
-{
-    message = ctx.message.text
-    if (message == "hi")
-        return ctx.reply("Hi")
-    
-
-});
 
 
+bot.launch()
   
-  // AWS event handler syntax (https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html)
-  exports.handler = async event => {
-    try {
-      await bot.handleUpdate(JSON.parse(event.body))
-      return { statusCode: 200, body: "" }
-    } catch (e) {
-      console.error("error in handler:", e)
-      return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
-    }
-  }
+  // // AWS event handler syntax (https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html)
+  // exports.handler = async event => {
+  //   try {
+  //     await bot.handleUpdate(JSON.parse(event.body))
+  //     return { statusCode: 200, body: "" }
+  //   } catch (e) {
+  //     console.error("error in handler:", e)
+  //     return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
+  //   }
+  // }
 
 
 
