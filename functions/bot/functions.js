@@ -26,8 +26,10 @@ async function fetchdata(urlE)
             owner: urldata.owner,
             repo: urldata.name,
             path: (urldata.type)?urldata.filepath:path
-          })
-          return data
+        })
+        console.log(data)
+        return data
+        
     }
     catch (e)
     {
