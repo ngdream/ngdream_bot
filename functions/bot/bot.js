@@ -1,5 +1,5 @@
 const { Telegraf, Markup ,Scenes,session} = require("telegraf")
-require('dotenv').config()
+//require('dotenv').config()
 
 
 const { Octokit } =require("octokit")
