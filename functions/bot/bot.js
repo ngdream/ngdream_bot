@@ -147,7 +147,13 @@ bot.command("share", ctx =>
     
   const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
 
-      if (!param) return ctx.reply('Missing param');
+      if (!param)
+      {
+        console.log("missing parameter")
+        return ctx.reply('Missing parameter');
+        
+        }
+ 
       f(param).then((data) =>
       { ctx.reply("le fichier sera envoyé sous peu")
         if (data.type)
