@@ -177,7 +177,7 @@ bot.command("share", ctx =>
           })
         }
         ctx.reply("le fichier sera envoyé sous peu")
-  
+  console.log("fichier envoyé")
       })
 
     
