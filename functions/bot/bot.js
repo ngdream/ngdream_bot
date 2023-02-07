@@ -178,11 +178,12 @@ bot.command("share", ctx =>
         }
         ctx.reply("le fichier sera envoyé sous peu")
   console.log("fichier envoyé")
-      })
+      },
+      (e)=>{console.log(e)})
 
     
     } catch (e) {
-      console.error("error in add action:", e)
+      console.error("error in share action:", e)
         return ctx.reply("Error occured")
         
     }
