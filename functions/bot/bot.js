@@ -159,7 +159,7 @@ bot.command("share", ctx =>
               source: new Buffer(data.content, "base64"),
               filename: data.name
               
-            })
+            }).catch(e=>console.log(e))
         }
         else
         {
