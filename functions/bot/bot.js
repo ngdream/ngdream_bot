@@ -51,7 +51,7 @@ async function makezip(zip,part)
     {
       console.log(p.content)
       var filedata= await f(p.html_url)
-      let decoded = Buffer.from(filedata.content, 'base64').toString('utf-8')
+      let decoded = Buffer.from(filedata.content, 'base64')
       zip.file(p.name, decoded);
     }
     else
@@ -76,8 +76,8 @@ I have lots of handy features
 - /start: Starts me! You've probably already used this .
 - /help: Sends this message; I'll tell you more about myself!
 - /donate: Gives you info on how to support me and my creator.
-- /share <your url> : can clone a repository or a subdirectory
-- /connect : connect ayour group to github account
+- /share <your url> : can clone a repository or a subdirectory (from github)
+- /connect : connect a group to github account (only admin)
 
 All commands can be used with the following: / !`
 
@@ -152,7 +152,7 @@ bot.command("share", async (ctx) => {
         
   }
   const data = await f(param)
-  ctx.reply("le fichier sera envoyé sous peu")
+  ctx.reply("a file will be send at soon ")
   if (data.type) {
 
     ctx.sendDocument(
@@ -175,7 +175,7 @@ bot.command("share", async (ctx) => {
       }).catch(e => console.log(e))
   }
           
-  console.log("fichier envoyé")
+  console.log("file is sent")
 })          
      
     
@@ -189,10 +189,10 @@ if (process.env.NODE_ENV == 'development')
   exports.handler = async event => {
     try {
       await bot.handleUpdate(JSON.parse(event.body))
-      return { statusCode: 200, body: "" }
+      return { statusCode: 200, body: "connection done" }
     } catch (e) {
       console.error("error in handler:", e)
-      return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
+      return { statusCode: 400, body: "" }
     }
   }
     }
