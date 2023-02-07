@@ -191,7 +191,9 @@ bot.command("share", ctx =>
 
 
 console.log(process.env.NODE_ENV)
-  if(process.env.NODE_ENV == 'development')
+if (process.env.NODE_ENV == 'development')
+{
+  console.log('bot launched on production')
   exports.handler = async event => {
     try {
       await bot.handleUpdate(JSON.parse(event.body))
@@ -201,7 +203,13 @@ console.log(process.env.NODE_ENV)
       return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
     }
   }
-  else
-  bot.launch()
+    }
+
+else
+{
+  console.log('bot launched')
+   bot.launch()
+  }
+ 
 
 
