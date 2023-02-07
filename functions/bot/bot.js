@@ -65,7 +65,7 @@ async function makezip(zip,part)
 }
 
 
-const bot = new Telegraf("5853131511:AAGkSPGXdb-E1bhEWoKf5AuiDQFdcSrCDZw");
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 
 
