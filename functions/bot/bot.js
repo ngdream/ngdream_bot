@@ -8,6 +8,7 @@ const {fetchdata,makezip}=require('./functions')
 
 const bot = new Telegraf(process.env.BOT_TOKEN,{
   polling: true,
+  handlerTimeout: 9_000_000
 });
 
 
@@ -94,7 +95,7 @@ bot.command("share", async (ctx) => {
 
   if (!param) {
     console.log("missing parameter")
-    return ctx.reply('Missing parameter');
+    return await ctx.reply('Missing parameter');
         
   }
   try
@@ -103,7 +104,7 @@ bot.command("share", async (ctx) => {
     ctx.reply("a file will be send at soon ")
     if (data.type) {
   
-      ctx.sendDocument(
+      return await ctx.sendDocument(
         {
           source: Buffer.from(data.content, "base64"),
           filename: data.name
@@ -115,7 +116,7 @@ bot.command("share", async (ctx) => {
       zip = new Jszip()
       await makezip(zip, data)
       content = await zip.generateAsync({ type: "nodebuffer" })
-      ctx.sendDocument(
+      return await ctx.sendDocument(
         {
           source: content,
           filename: param + ".zip"
@@ -128,7 +129,7 @@ bot.command("share", async (ctx) => {
   catch (e)
   {
     console.log(e)
-    ctx.reply(e)
+    return ctx.reply(e)
   }
 
 })          
