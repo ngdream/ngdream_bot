@@ -27,7 +27,7 @@ async function fetchdata(urlE)
             repo: urldata.name,
             path: (urldata.type)?urldata.filepath:path
         })
-        console.log(data)
+
         return data
         
     }

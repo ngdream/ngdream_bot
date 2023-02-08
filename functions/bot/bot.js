@@ -1,6 +1,7 @@
-const { Telegraf, Markup ,Scenes,session} = require("telegraf")
+
 require('dotenv').config()
 
+const { Telegraf, Markup } = require("telegraf")
 
 
 const Jszip = require('jszip')
@@ -101,7 +102,7 @@ bot.command("share", async (ctx) => {
   try
   {
     const data = await fetchdata(param)
-    ctx.reply("a file will be send at soon ")
+    await ctx.reply("a file will be send at soon ")
     if (data.type) {
   
       return await ctx.sendDocument(
@@ -129,7 +130,7 @@ bot.command("share", async (ctx) => {
   catch (e)
   {
     console.log(e)
-    return ctx.reply(e)
+    return await ctx.reply(e)
   }
 
 })          
@@ -152,6 +153,6 @@ if (process.env.NODE_ENV == 'development')
 
 else
 {
-  console.log('bot launched')
-   bot.launch()
+
+   bot.launch().then(console.log("bot launched"))
   }
