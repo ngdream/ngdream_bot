@@ -1,0 +1,40 @@
+body
+{
+    background-color:#111 ;
+    margin: 0;
+    font-family: "roboto", sans-serif;
+
+}
+
+
+*
+{
+    position: relative;
+}
+
+section
+{
+    text-align: center;
+}
+.section-title
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.section-title h1:first-child
+{
+    font-size: 8rem;
+    -webkit-text-stroke: 1px #dee2e6;
+    color: transparent;
+    position: relative;
+}
+h1
+{
+    color: rgb(0, 204, 255);
+    font-size: 4rem;
+    position: absolute;
+    text-transform: uppercase;
+}
