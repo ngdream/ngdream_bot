@@ -6,15 +6,31 @@ body
 
 }
 
+h2
+{
+    color: rgb(131, 236, 255);
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+
+h1,h2,h3,h4,h5,h6
+{
+    text-transform: uppercase;
+}
 
 *
 {
     position: relative;
+    box-sizing: border-box;
+    transition: 0.3s;
 }
 
 section
 {
     text-align: center;
+    padding: 0 100px;
+    margin-top: 20px;
 }
 .section-title
 {
@@ -30,11 +46,112 @@ section
     -webkit-text-stroke: 1px #dee2e6;
     color: transparent;
     position: relative;
+    margin: 0;
+}
+
+
+p
+{
+    min-height: 256px;
+    border-radius: 100px;
+    padding: 25px 100px;
+    font-size: 1.1rem ;
+    color: white;
+    text-align: justify;
+    line-height: 1,5;
+}
+header
+{
+    display: flex;
+    height: 100vh;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    padding: 50px;
+    border-bottom: 5px solid #6be6ff;
+    box-shadow: 0 0 30px 0 rgba(0,255,255,.333);
+}
+
+.header-content
+{
+   
+    height: 100%;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+
+
+ 
+
+}
+a
+{
+    text-decoration: none;
+
+}
+
+.buttons
+{
+    display: flex;
+}
+.btn
+{
+    margin:0 20px;
+    width: 250px;
+    padding: 15 0;
+    text-align: center;
+    display: inline-block;
+    background-color: rgb(0, 237, 245);
+    color: #000;
+    font-weight: bold;
+    clip-path:  polygon(0 10px , 10px 0 ,  100% 0 , 100% calc(100% - 10px) , calc(100% - 10px) 100% , 0 100%);
+}
+.profil
+{
+    height: 456px;
+    margin: 100 auto;
+  
 }
 h1
 {
     color: rgb(0, 204, 255);
     font-size: 4rem;
-    position: absolute;
-    text-transform: uppercase;
 }
+.section-title h1
+{
+
+    position: absolute;
+   
+}
+
+p
+{
+    animation:  0,2s shake infinite;
+}
+
+section >section
+{
+    padding: 0;
+    font-size: 1em;
+}
+.presentation
+ {
+    display: flex;
+    align-items: center;
+    margin: 20px;
+
+
+ }
+
+ .presentation >h3
+ {
+    color: #6be6ff;
+    font-size: 2.4rem;
+    margin: auto;
+    font-weight: 500;
+ }
+
+ .presentation:nth-child(odd)
+ {
+    flex-direction: row-reverse;
+ }

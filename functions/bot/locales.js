@@ -78,11 +78,11 @@ const LOCALES =
     "donate":
     {
         "en":`So you want to donate? Amazing!
-        You can donate on PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C), or you can set up a recurring donation on GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
+        You can donate on PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C),
         This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!`,
 
         "fr": `Alors vous voulez faire un don ? Incroyable!
-        Vous pouvez faire un don sur PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C), ou vous pouvez configurer un don récurrent sur GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
+        Vous pouvez faire un don sur PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C).
         Ce projet est entièrement géré par des bénévoles et les frais de serveur ne sont pas bon marché, nous vous remercions donc pour votre soutien !`,
 
         "ci": `所以你想捐款？惊人的！
