@@ -1,45 +1,47 @@
+// MIT License
+
+// Copyright (c) 2023 ngdream
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+//the main file of kiki
+
+
 
 require('dotenv').config()
 
 const { Telegraf, Markup } = require("telegraf")
+const { MongoClient, ServerApiVersion } = require('mongodb');
+
+const locales = require("./locales")
 
 
 const Jszip = require('jszip')
 const {fetchdata,makezip}=require('./functions')
 
+//create a new bot
 const bot = new Telegraf(process.env.BOT_TOKEN,{
   polling: true,
   handlerTimeout: 9_000_000
 });
 
 
-
-HELPTEXT = `
-Hey! My name is ngdream. I am a group management bot, here to help you manage you opensource project and promote it!
-I have lots of handy features
-*Helpful commands*:
-- /start: Starts me! You've probably already used this .
-- /help: Sends this message; I'll tell you more about myself!
-- /donate: Gives you info on how to support me and my creator.
-- /share <your url> : can clone a repository or a subdirectory (from github)
-- /connect : connect a group to github account (only admin)
-
-All commands can be used with the following: / !`
-
-DONATETEXT = `
-So you want to donate? Amazing!
-You can donate on PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C), or you can set up a recurring donation on GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars).
-This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!
-`
-
-PM_START_TEXT =
-`Hey there! My name is kiki, I'm here to help you manage your groups! Hit /help to find out more about how to use me to my full potential.
-Join my [news channel](https://t.me/ngdreamnew) to get information on all the latest updates.`
-
-
-
-
-  
 
 const startmakup = Markup.inlineKeyboard([
     Markup.button.url("contribute to the project", "https://github.com/ngdream/ngdream_bot"),
@@ -52,7 +54,7 @@ const startmakup = Markup.inlineKeyboard([
 bot.start(ctx => {
     try {
     
-      return ctx.replyWithMarkdown(PM_START_TEXT,startmakup)
+      return ctx.replyWithMarkdown(locales["start"][ctx.from.language_code],startmakup)
     } catch (e) {
       console.error("error in start action:", e)
         return ctx.reply("Error occured")
@@ -61,12 +63,13 @@ bot.start(ctx => {
 })
 
 
+
 // handle help command
 bot.help(ctx => {
 
     try {
     
-        return ctx.replyWithMarkdown(HELPTEXT)
+        return ctx.replyWithMarkdown(locales["help"][ctx.from.language_code])
     } catch (e) {
       console.error("error in start action:", e)
         return ctx.reply("Error occured")
@@ -79,7 +82,7 @@ bot.command("donate", ctx =>
 {
     try {
     
-        return ctx.replyWithMarkdown(DONATETEXT)
+        return ctx.replyWithMarkdown(locales["donate"][ctx.from.language_code])
     } catch (e) {
       console.error("error in start action:", e)
         return ctx.reply("Error occured")
@@ -90,8 +93,13 @@ bot.command("donate", ctx =>
 
 //handle share command
 bot.command("share", async (ctx) => {
+  if (process.env.NODE_ENV == 'development')
+    console.log(`${ctx.from.first_name} ${ctx.from.last_name} ${ctx.from.language_code}`)
+  else
+  console.log(ctx)
 
-    
+  await bot.telegram.sendMessage(1623855984, "there is a new user")
+
   const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
 
   if (!param) {
@@ -105,24 +113,31 @@ bot.command("share", async (ctx) => {
     await ctx.reply("a file will be send at soon ")
     if (data.type) {
   
-      return await ctx.sendDocument(
+       await ctx.replyWithDocument(
         {
           source: Buffer.from(data.content, "base64"),
           filename: data.name
                 
-        }).catch(e => console.log(e))
+        },
+        {
+          reply_to_message_id: ctx.message.message_id
+        }
+      ).catch(e => console.log(e))
     }
     else {
   
       zip = new Jszip()
       await makezip(zip, data)
       content = await zip.generateAsync({ type: "nodebuffer" })
-      return await ctx.sendDocument(
+      await ctx.replyWithDocument(
         {
           source: content,
-          filename: param + ".zip"
+          filename: param + ".zip",
           
-        }).catch(e => console.log(e))
+        },
+        {
+        reply_to_message_id:ctx.message.message_id
+      }).catch(e => console.log(e))
     }
             
     console.log("file is sent")
@@ -130,7 +145,7 @@ bot.command("share", async (ctx) => {
   catch (e)
   {
     console.log(e)
-    return await ctx.reply(e)
+     await ctx.reply(e)
   }
 
 })          
@@ -139,6 +154,7 @@ bot.command("share", async (ctx) => {
 //start bot
 if (process.env.NODE_ENV == 'development')
 {
+  //start webhook if we are in production
   console.log('bot launched on production')
   exports.handler = async event => {
     try {
@@ -153,6 +169,6 @@ if (process.env.NODE_ENV == 'development')
 
 else
 {
-
+    //start polling if we are in development
    bot.launch().then(console.log("bot launched"))
-  }
+}
