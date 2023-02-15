@@ -65,7 +65,7 @@ var initialize = async () => {
   const db = (await MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })).db("test");
 
   bot.use(session(db));
-
+  console.log("test")
   bot.use(showuserinfo)
  
 
