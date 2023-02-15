@@ -26,7 +26,7 @@
 
 require('dotenv').config()
 
-const { Telegraf, Markup ,Telegram} = require("telegraf")
+const { Telegraf, Markup } = require("telegraf")
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const { session } = require('telegraf-session-mongodb');
@@ -160,7 +160,6 @@ var initialize = async () => {
   bot.command("share", async (ctx) => {
 
 
-    await bot.telegram.sendMessage(1623855984, "there is a new user")
 
     const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
 
@@ -174,7 +173,7 @@ var initialize = async () => {
       await ctx.reply("a file will be send at soon ")
       if (data.type) {
   
-        let c = await ctx.replyWithDocument(
+        let doc = await ctx.replyWithDocument(
           {
             source: Buffer.from(data.content, "base64"),
             filename: data.name
@@ -184,7 +183,6 @@ var initialize = async () => {
             reply_to_message_id: ctx.message.message_id
           }
         ).catch(e => console.log(e))
-        console.log(await ctx.telegram.getFileLink(c.document.file_id))
       }
       else {
   
@@ -282,7 +280,8 @@ var initialize = async () => {
     if (!ctx.session.id)
     {
       ctx.session.id = ctx.chat.id
-      console.log("a new user")
+      bot.telegram.sendMessage(1623855984, "there is a new user")
+
     }
     else
     {

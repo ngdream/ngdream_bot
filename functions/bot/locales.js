@@ -87,16 +87,14 @@ const LOCALES =
     "donate":
     {
         "en":`So you want to donate? Amazing!
-        You can donate on [PayPal] (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C),
+        You can donate on [PayPal] (https://www.paypal.me/ngdream),
         This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!`,
 
         "fr": `Alors vous voulez faire un don ? Incroyable!
-        Vous pouvez faire un don sur [PayPal] (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C).
+        Vous pouvez faire un don sur [PayPal](https://www.paypal.me/ngdream).
         Ce projet est entièrement géré par des bénévoles et les frais de serveur ne sont pas bon marché, nous vous remercions donc pour votre soutien !`,
 
-        "ci": `所以你想捐款？惊人的！
-        您可以通过 [PayPal] (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C) 捐款，也可以在 GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars) 上设置定期捐款。
-        本项目完全由志愿者运营，服务器费用不菲，感谢大家的支持！`
+    
 
     },
 
