@@ -72,7 +72,6 @@ var initialize = async () => {
   //handle start command
   bot.start(ctx => {
     try {
-      console.log(ctx)
       if (ctx.startPayload) {
         ctx.session.token = ctx.startPayload;
         return ctx.reply(`thanks for login`)
