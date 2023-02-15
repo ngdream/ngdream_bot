@@ -26,14 +26,19 @@
 
 require('dotenv').config()
 
-const { Telegraf, Markup } = require("telegraf")
+const { Telegraf, Markup ,Telegram} = require("telegraf")
 const { MongoClient, ServerApiVersion } = require('mongodb');
+
+const { session } = require('telegraf-session-mongodb');
+
 
 const locales = require("./locales")
 
-
 const Jszip = require('jszip')
-const {fetchdata,makezip}=require('./functions')
+const {showuserinfo}=require("./middleware")
+
+
+const {fetchdata,makezip, createrepo,connecteduserfollowers,connecteduserfollowing,deleterepo,followers,following}=require('./functions')
 
 //create a new bot
 const bot = new Telegraf(process.env.BOT_TOKEN,{
@@ -42,133 +47,272 @@ const bot = new Telegraf(process.env.BOT_TOKEN,{
 });
 
 
-
 const startmakup = Markup.inlineKeyboard([
     Markup.button.url("contribute to the project", "https://github.com/ngdream/ngdream_bot"),
-    Markup.button.url("join ngcodex community", "https://t.me/ngcodex"),
+    Markup.button.url("join ngdream channel", "https://t.me/ngdreamnew"),
+
+]);
+
+const connectmakup = Markup.inlineKeyboard([
+  Markup.button.url("login", `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&scope=admin repo user workflow delete_repo project gist codespace&state=19052003`),
 
 ]);
 
 
-//handle start command
-bot.start(ctx => {
-    try {
-    
-      return ctx.replyWithMarkdown(locales["start"][ctx.from.language_code],startmakup)
-    } catch (e) {
-      console.error("error in start action:", e)
-        return ctx.reply("Error occured")
-        
-    }
-})
 
-
-
-// handle help command
-bot.help(ctx => {
-
-    try {
-    
-        return ctx.replyWithMarkdown(locales["help"][ctx.from.language_code])
-    } catch (e) {
-      console.error("error in start action:", e)
-        return ctx.reply("Error occured")
-        
-    }
-});
-
-//handle donate command
-bot.command("donate", ctx =>
-{
-    try {
-    
-        return ctx.replyWithMarkdown(locales["donate"][ctx.from.language_code])
-    } catch (e) {
-      console.error("error in start action:", e)
-        return ctx.reply("Error occured")
-        
-    }
-})
-
-
-//handle share command
-bot.command("share", async (ctx) => {
-  if (process.env.NODE_ENV == 'development')
-    console.log(`${ctx.from.first_name} ${ctx.from.last_name} ${ctx.from.language_code}`)
-  else
-  console.log(ctx)
-
-  await bot.telegram.sendMessage(1623855984, "there is a new user")
-
-  const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
-
-  if (!param) {
-    console.log("missing parameter")
-    return await ctx.reply('Missing parameter');
-        
-  }
-  try
-  {
-    const data = await fetchdata(param)
-    await ctx.reply("a file will be send at soon ")
-    if (data.type) {
+var initialize = async () => {
   
-       await ctx.replyWithDocument(
-        {
-          source: Buffer.from(data.content, "base64"),
-          filename: data.name
-                
-        },
-        {
-          reply_to_message_id: ctx.message.message_id
-        }
-      ).catch(e => console.log(e))
+  const db = (await MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })).db("test");
+
+  bot.use(session(db));
+
+  bot.use(showuserinfo)
+ 
+
+  //handle start command
+  bot.start(ctx => {
+    try {
+      console.log(ctx)
+      if (ctx.startPayload) {
+        ctx.session.token = ctx.startPayload;
+        return ctx.reply(`thanks for login`)
+      }
+
+      return ctx.replyWithMarkdown(locales["start"][ctx.from.language_code], startmakup)
+    } catch (e) {
+      console.error("error in start action:", e)
+      return ctx.reply("Error occured")
+        
+    }
+  })
+
+  // handle help command
+  bot.help(ctx => {
+
+    try {
+    
+      return ctx.replyWithMarkdown(locales["help"][ctx.from.language_code])
+    } catch (e) {
+      console.error("error in start action:", e)
+      return ctx.reply("Error occured")
+        
+    }
+  });
+
+  //command to show follower
+  bot.command("maintenance", async (ctx) => {
+
+    const [cmd, param1] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+
+    if (ctx.chat.id == 1623855984) {
+      if (!param1) {
+        console.log("missing parameter")
+        await ctx.reply("missing parameter")
+      }
+      else {
+
+        let docs = db.collection("sessions").find()
+
+        docs.forEach(async (i) => {
+          let time = param1.replace("h", " hrs").replace("m", " min")
+          try {
+            await ctx.telegram.sendMessage(i.data.id, locales["maintenance"][ctx.from.language_code].replace("/time/", time))
+          }
+          catch (e) {
+            console.log(`cannot send to this user ${e}`)
+          }
+        })
+        
+      }
+
     }
     else {
-  
-      zip = new Jszip()
-      await makezip(zip, data)
-      content = await zip.generateAsync({ type: "nodebuffer" })
-      await ctx.replyWithDocument(
-        {
-          source: content,
-          filename: param + ".zip",
-          
-        },
-        {
-        reply_to_message_id:ctx.message.message_id
-      }).catch(e => console.log(e))
+      ctx.reply(locales["denied"][ctx.from.language_code])
     }
-            
-    console.log("file is sent")
-  }
-  catch (e)
-  {
-    console.log(e)
-     await ctx.reply(e)
-  }
+  })
 
-})          
-     
-    
-//start bot
-if (process.env.NODE_ENV == 'development')
-{
-  //start webhook if we are in production
-  console.log('bot launched on production')
-  exports.handler = async event => {
+  //connect to your github account
+  bot.command("connect", ctx => {
     try {
-      await bot.handleUpdate(JSON.parse(event.body))
-      return { statusCode: 200, body: "connection done" }
+ 
+      return ctx.replyWithMarkdown(locales["connect"][ctx.from.language_code], connectmakup)
     } catch (e) {
-      console.error("error in handler:", e)
-      return { statusCode: 400, body: "" }
+      console.error("error in connect action:", e)
+      return ctx.reply("Error occured")
+        
     }
-  }
+  })
+
+  //handle donate command
+  bot.command("donate", ctx => {
+    try {
+    
+      return ctx.replyWithMarkdown(locales["donate"][ctx.from.language_code])
+    } catch (e) {
+      console.error("error in start action:", e)
+      return ctx.reply("Error occured")
+        
+    }
+  })
+
+
+  //handle share command
+  bot.command("share", async (ctx) => {
+
+
+    await bot.telegram.sendMessage(1623855984, "there is a new user")
+
+    const [cmd, param] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+
+    if (!param) {
+      console.log("missing parameter")
+      return await ctx.reply('Missing parameter');
+        
+    }
+    try {
+      const data = await fetchdata(param)
+      await ctx.reply("a file will be send at soon ")
+      if (data.type) {
+  
+        let c = await ctx.replyWithDocument(
+          {
+            source: Buffer.from(data.content, "base64"),
+            filename: data.name
+                
+          },
+          {
+            reply_to_message_id: ctx.message.message_id
+          }
+        ).catch(e => console.log(e))
+        console.log(await ctx.telegram.getFileLink(c.document.file_id))
+      }
+      else {
+  
+        zip = new Jszip()
+        await makezip(zip, data)
+        content = await zip.generateAsync({ type: "nodebuffer" })
+        let c = await ctx.replyWithDocument(
+          {
+            source: content,
+            filename: param + ".zip",
+          
+          },
+          {
+            reply_to_message_id: ctx.message.message_id
+          }).catch(e => console.log(e))
+        console.log(c)
+      }
+            
+      console.log("file is sent")
+    }
+    catch (e) {
+      console.log(e)
+      await ctx.reply(e)
     }
 
-else
-{
+  })
+     
+
+
+  //handle share command
+  bot.command("create", async (ctx) => {
+
+    const [cmd, param1] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+  
+    if (!param1) {
+      console.log("missing parameter")
+    }
+    else {
+      await createrepo(ctx, param1)
+    }
+
+  })
+  
+  
+  //handle share command
+  bot.command("delete", async (ctx) => {
+
+
+    const [cmd, param1, param2] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+
+    if (!param1 && !param2) {
+      console.log("missing parameter")
+      await ctx.reply("missing parameter")
+    }
+    else if (param1) {
+      await deleterepo(ctx, param1)
+    }
+    else {
+      //coming soon
+    }
+  })
+
+  //command to show follower
+  bot.command("followers", async (ctx) => {
+
+    const [cmd, param1] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+
+    if (!param1) {
+       await connecteduserfollowers(ctx)
+
+    }
+    else {
+       await followers(ctx, param1)
+    }
+  })
+
+
+  //command to show following
+  bot.command("following", async (ctx) => {
+    const [cmd, param1] = (ctx.message.reply_to_message || ctx.message).text.split(' ')
+    if (!param1) {
+       await connecteduserfollowing(ctx)
+
+    }
+    else {
+      await following(ctx, param1)
+
+    }
+  }
+  )
+
+
+  bot.on(["message", "new_chat_members"], ctx =>
+  {
+    if (!ctx.session.id)
+    {
+      ctx.session.id = ctx.chat.id
+      console.log("a new user")
+    }
+    else
+    {
+      console.log(ctx.session.id)
+    }
+
+      
+  })
+    
+  //start bot
+  if (process.env.NODE_ENV == 'development') {
+    //start webhook if we are in production
+    console.log('bot launched on production')
+    exports.handler = async event => {
+      try {
+        await bot.handleUpdate(JSON.parse(event.body))
+        return { statusCode: 200, body: "connection done" }
+      } catch (e) {
+        console.error("error in handler:", e)
+        return { statusCode: 400, body: "" }
+      }
+    }
+  }
+
+  else {
     //start polling if we are in development
-   bot.launch().then(console.log("bot launched"))
+    bot.launch().then(console.log("bot launched"))
+  }
+
 }
+
+
+initialize()

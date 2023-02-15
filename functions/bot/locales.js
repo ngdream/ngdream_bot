@@ -43,53 +43,91 @@ const LOCALES =
 
     "help":
     {
-        "en":`Hey! My name is ngdream. I am a group management bot, here to help you manage you opensource project and promote it!
+        "en":`Hey! My name is kiki. I am a project management bot  , here to help you manage your developer project and promote it!
         I have lots of handy features
         *Helpful commands*:
+        - /maintain
         - /start: Starts me! You've probably already used this .
         - /help: Sends this message; I'll tell you more about myself!
         - /donate: Gives you info on how to support me and my creator.
         - /share <your url> : can clone a repository or a subdirectory (from github)
         - /connect : connect a group to github account (only admin)
+        - /following <username> : see people followed by a specified user
+        - /follower <username> : see people who follows a specified user
+
+        *only for connected user*
+        - /create <repo_name> create a new github repository
+        - /delete <url>
+
         
         All commands can be used with the following: / !`,
 
-        "fr": `Hey ! Je m'appelle ngdream. Je suis un bot de gestion de groupe, ici pour vous aider à gérer votre projet opensource et à le promouvoir !
-        J'ai beaucoup de fonctionnalités pratiques
-        *Commandes utiles* :
-        - /start : me lance ! Vous avez probablement déjà utilisé ce .
-        - /help : envoie ce message ; je vous en dirai plus sur moi !
-        - /donate : vous donne des informations sur la façon de me soutenir, moi et mon créateur.
-        - /share <votre url> : peut cloner un dépôt ou un sous-répertoire (depuis github)
-        - /connect : connecte un groupe au compte github (seulement admin)`,
+        "fr": `Hey! My name is kiki. I am a project management bot  , here to help you manage your developer project and promote it!
+        I have lots of handy features
+        *Helpful commands*:
+        - /maintain
+        - /start: Starts me! You've probably already used this .
+        - /help: Sends this message; I'll tell you more about myself!
+        - /donate: Gives you info on how to support me and my creator.
+        - /share <your url> : can clone a repository or a subdirectory (from github)
+        - /connect : connect a group to github account (only admin)
+        - /following <username> : see people followed by a specified user
+        - /follower <username> : see people who follows a specified user
 
-        "ci":`嘿！我的名字是 ngdream。我是群管机器人，来帮你管理你的开源项目，推广它！
-我有很多方便的功能
-*有用的命令*：
-- /开始：开始我！您可能已经使用过这个。
-- /帮助：发送此消息；我会告诉你更多关于我自己的事！
-- /donate：为您提供有关如何支持我和我的创造者的信息。
-- /share <your url>: 可以克隆存储库或子目录（来自 github）
-- /connect: 将组连接到 github 帐户（仅限管理员）
+        *only for connected user*
+        - /create <repo_name> create a new github repository
+        - /delete <url>
 
-所有命令都可以与以下命令一起使用：/ !`
+        
+        All commands can be used with the following: / !`,
+
+
     },
 
     "donate":
     {
         "en":`So you want to donate? Amazing!
-        You can donate on PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C),
+        You can donate on [PayPal] (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C),
         This project is entirely run by volunteers, and server fees aren't cheap, so we thank you for your support!`,
 
         "fr": `Alors vous voulez faire un don ? Incroyable!
-        Vous pouvez faire un don sur PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C).
+        Vous pouvez faire un don sur [PayPal] (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C).
         Ce projet est entièrement géré par des bénévoles et les frais de serveur ne sont pas bon marché, nous vous remercions donc pour votre soutien !`,
 
         "ci": `所以你想捐款？惊人的！
-        您可以通过 PayPal (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C) 捐款，也可以在 GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars) 上设置定期捐款。
+        您可以通过 [PayPal] (https://www.paypal.com/donate/?hosted_button_id=2NGECBY5Y635C) 捐款，也可以在 GitHub Sponsors (https://github.com/sponsors/PaulSonOfLars) 上设置定期捐款。
         本项目完全由志愿者运营，服务器费用不菲，感谢大家的支持！`
 
-    }
+    },
+
+    "connect":
+    {
+        "en": "login to your github account and use powerful functionalities",
+        "fr":"connectez-vous a votre compte github et  utilisez de plus puissante fonctionnalités "
+    },
+    "maintenance":
+    {
+        "en": "i'm  going on maintainance for  /time/",
+        "fr":"je serais en  maintenance pour /time/"
+    },
+
+
+
+    "denied":
+    {
+        "en": "permission denied",
+        "fr": "permission refusé"
+        
+    },
+
+    "fsend":
+    {
+        "en": "file sent successfully",
+        "fr":"fichier envoyé avec success"
+    },
+
+
+
 
     
 }

@@ -108,7 +108,7 @@ a
 }
 .profil
 {
-    height: 456px;
+   
     margin: 100 auto;
   
 }
@@ -154,4 +154,27 @@ section >section
  .presentation:nth-child(odd)
  {
     flex-direction: row-reverse;
+ }
+
+ @media only screen and (max-width: 768px) {
+
+    .presentation
+    {
+        flex-direction: column!important;
+    }
+
+    header
+    {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .profil
+    {
+        width: 100px;
+        margin: 0;
+    }
+    H2
+    {
+        font-size: 2rem;
+    }
  }
