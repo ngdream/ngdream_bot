@@ -61,7 +61,7 @@ const connectmakup = Markup.inlineKeyboard([
 
 
 var initialize = async () => {
-  console.log("process.env.MONGODB_URI")
+  console.log(process.env.MONGODB_URI)
   const db = (await MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })).db("test");
 console.log("connection done")
   bot.use(session(db));
