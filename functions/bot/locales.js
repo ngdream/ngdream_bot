@@ -43,40 +43,40 @@ const LOCALES =
 
     "help":
     {
-        "en":`Hey My name is kiki. I am a project management bot  , here to help you manage your developer project and promote it
+        "en":`Hey My name is kiki. I am a project management bot. I am here to help you manage your developer project and promote it.
         I have lots of handy features
         *Helpful commands*:
         - /maintain
-        - /start: Starts me You've probably already used this .
+        - /start: Starts me. You've probably already used this.
         - /help: Sends this message; I'll tell you more about myself
         - /donate: Gives you info on how to support me and my creator.
-        - /share <your url> : can clone a repository or a subdirectory (from github)
-        - /connect : connect a group to github account (only admin)
-        - /following <username> : see people followed by a specified user
-        - /follower <username> : see people who follows a specified user
+        - /share <your url>: Can clone a repository or a subdirectory (from github)
+        - /connect : Connect a group to github account (only admins can perform this command).
+        - /following <username> : See people followed by a specified user.
+        - /follower <username> : See people who follows a specified user.
 
-        *only for connected user*
-        - /create <repo name> create a new github repository
-        - /delete <url>
+        *Only for connected user*
+        - /create <repo name>: Create a new github repository.
+        - /delete <url>: Delete a repository or subdirectory.
 
         
         All commands can be used with the following: / `,
 
-        "fr": `Hey My name is kiki. I am a project management bot  , here to help you manage your developer project and promote it
-        I have lots of handy features
+        "fr": `Salut je m'appelle kiki. Je suis un bot de gestion, qui vous aide a gérer vos projets de développement et les promouvoir.
+        J'ai beaucoup de fonctionnalistes.
         *Helpful commands*:
         - /maintain
-        - /start: Starts me You've probably already used this .
-        - /help: Sends this message; I'll tell you more about myself
-        - /donate: Gives you info on how to support me and my creator.
-        - /share <your url> : can clone a repository or a subdirectory (from github)
-        - /connect : connect a group to github account (only admin)
-        - /following <username> : see people followed by a specified user
-        - /follower <username> : see people who follows a specified user
+        - /start: Permet de me lancer, vous avez du utiliser cette commande.
+        - /help: Envoyer cette commande pour avoir plus de descriptions sur moi.
+        - /donate: Vous donne des informations sur comment supporter mon créateur.
+        - /share <votre url> : Permet de cloner un répertoire et sous dossier (juste avec girthub). 
+        - /connect : Connecte un groupe a un compte github (juste les admins).
+        - /following <nom d’utilisateur> : Voir les personnes suivie par un utilisateur
+        - /follower <nom d’utilisateur> : Voir les personnes suivant un utilisateur précis.
 
-        *only for connected user*
-        - /create <repo name> create a new github repository
-        - /delete <url>
+        *juste pour lutilisateur*
+        - /create <repo name>: Cree un noveau repertoire github.
+        - /delete <url>: 
 
         
         All commands can be used with the following:  `,
@@ -103,13 +103,12 @@ const LOCALES =
         "en": "login to your github account and use powerful functionalities",
         "fr":"connectez-vous a votre compte github et  utilisez de plus puissante fonctionnalités "
     },
+
     "maintenance":
     {
         "en": "i'm  going on maintainance for  /time/",
         "fr":"je serais en  maintenance pour /time/"
     },
-
-
 
     "denied":
     {
