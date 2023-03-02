@@ -42,7 +42,8 @@ async function fetchdata(repo_url)
 {
     try
     {
-        var urldata = gh(repo_url);
+        var decoded_url=decodeURI(repo_url)
+        var urldata = gh(decodeURI);
         let path = ""
         if (!urldata.type) {
             if (urldata.path !== urldata.repo) {
