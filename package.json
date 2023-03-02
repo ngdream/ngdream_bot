@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bot": "node ./functions/bot/bot.js"
+    "bot": "node ./functions/bot/bot.js",
+    "start": "node ./functions/bot/bot.js"
+
   },
   "author": "ngdream",
   "license": "MIT",

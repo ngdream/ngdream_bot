@@ -294,15 +294,23 @@ console.log("connection done")
   if (process.env.NODE_ENV == 'development') {
     //start webhook if we are in production
     console.log('bot launched on production')
-    exports.handler = async event => {
-      try {
-        await bot.handleUpdate(JSON.parse(event.body))
-        return { statusCode: 200, body: "connection done" }
-      } catch (e) {
-        console.error("error in handler:", e)
-        return { statusCode: 400, body: "" }
+    // exports.handler = async event => {
+    //   try {
+    //     await bot.handleUpdate(JSON.parse(event.body))
+    //     return { statusCode: 200, body: "connection done" }
+    //   } catch (e) {
+    //     console.error("error in handler:", e)
+    //     return { statusCode: 400, body: "" }
+    //   }
+    // }
+    bot.launch({
+      webhook:{
+          domain: process.env.DOMAIN,// Your domain URL (where server code will be deployed)
+          port: process.env.PORT || 8000
       }
-    }
+    }).then(() => {
+      console.info(`The bot ${bot.botInfo.username} is running on server`);
+    });
   }
 
   else {
