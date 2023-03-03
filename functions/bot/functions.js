@@ -27,7 +27,10 @@
 
 var gh = require('parse-github-url');
 const  axios=require("axios").default
-const { Octokit } =require("octokit")
+const { Octokit } = require("octokit")
+
+const url=require('url');
+const gitUrlParse = require('git-url-parse');
 
 
 //default token for all user
@@ -42,20 +45,20 @@ async function fetchdata(repo_url)
 {
     try
     {
-        var decoded_url=decodeURI(repo_url)
-        var urldata = gh(decodeURI);
+      var decoded_url = decodeURI(repo_url)
+    
+        var urldata = gitUrlParse(repo_url)
         let path = ""
-        if (!urldata.type) {
-            if (urldata.path !== urldata.repo) {
-                path = urldata.path
-                path = path.substring(path.indexOf(urldata.branch))
-                path = path.substring(path.indexOf("/") + 1)
-            }
+        if (urldata.filepath) {
+         
+                path = urldata.filepath
+   
+          
         }
         const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: urldata.owner,
             repo: urldata.name,
-            path: (urldata.type)?urldata.filepath:path
+            path:path
         })
 
         return data

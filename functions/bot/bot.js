@@ -197,7 +197,7 @@ console.log("connection done")
           {
             reply_to_message_id: ctx.message.message_id
           }).catch(e => console.log(e))
-        console.log(c)
+      
       }
             
       console.log("file is sent")
