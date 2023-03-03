@@ -254,7 +254,7 @@ async function makezip(zip,part)
 
     if (p.type === "file")
     {
-      var filedata= fetchdata(p.html_url)
+      var filedata= await fetchdata(p.html_url)
       let decoded = Buffer.from(filedata.content, 'base64')
       zip.file(p.name, decoded);
     }
