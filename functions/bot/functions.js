@@ -117,14 +117,18 @@ async function createrepo(ctx,name)
 {
   try
   {
-    console.log(`bearer ${token}`)
+   
 const octokit2 = new Octokit({
   auth: ctx.session.token
 })
 
  await octokit2.rest.repos.createForAuthenticatedUser({
       
-      name: name
+   name: name,
+   description: '',
+   homepage: 'https://github.com',
+   'private': false,
+   is_template: true,
  }).catch(err => { 
    if (err.status == 422)
    ctx.reply("the repository already exists",

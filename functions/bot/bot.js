@@ -220,7 +220,7 @@ console.log("connection done")
       console.log("missing parameter")
     }
     else {
-      await createrepo(ctx, param1)
+      await createrepo(ctx, param1).catch(e=>console.log(e))
     }
 
   })
