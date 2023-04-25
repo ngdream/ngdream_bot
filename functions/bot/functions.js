@@ -41,11 +41,11 @@ const octokit = new Octokit({
 })
 
 
+
 async function fetchdata(repo_url)
 {
     try
     {
-      var decoded_url = decodeURI(repo_url)
     
         var urldata = gitUrlParse(repo_url)
         let path = ""
@@ -69,6 +69,29 @@ async function fetchdata(repo_url)
         throw repo_url+ " its not  valid github url"
         
         }
+}
+
+
+async function makezip(zip,part)
+{
+  for (const p of part)
+  {
+
+    if (p.type === "file")
+    {
+      var filedata= await fetchdata(p.html_url)
+      let decoded = Buffer.from(filedata.content, 'base64')
+      zip.file(p.name, decoded);
+    }
+    else
+    {
+      var newfolder = zip.folder(p.name);
+      var folderdata = await fetchdata(p.html_url)
+      console.log(folderdata)
+      await makezip(newfolder,folderdata)
+    }
+
+    }
 }
 
 //this function delete a github repositorie with his link
@@ -247,26 +270,6 @@ async function connecteduserfollowers(ctx)
 
 
 
-async function makezip(zip,part)
-{
-  for (const p of part)
-  {
-
-    if (p.type === "file")
-    {
-      var filedata= await fetchdata(p.html_url)
-      let decoded = Buffer.from(filedata.content, 'base64')
-      zip.file(p.name, decoded);
-    }
-    else
-    {
-      var newfolder = zip.folder(p.name);
-      var folderdata= await fetchdata(p.html_url)
-      await makezip(newfolder,folderdata)
-    }
-
-    }
-}
 
 
 module.exports= { fetchdata,makezip,createrepo,deleterepo,followers,following,connecteduserfollowers,connecteduserfollowing}
