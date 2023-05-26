@@ -26,244 +26,222 @@
 
 
 var gh = require('parse-github-url');
-const  axios=require("axios").default
+const axios = require("axios").default
 const { Octokit } = require("octokit")
 
-const url=require('url');
+const url = require('url');
 const gitUrlParse = require('git-url-parse');
 
 
 //default token for all user
 const octokit = new Octokit({
 
-  auth:process.env.GITHUB_TOKEN
+  auth: process.env.GITHUB_TOKEN
 
 })
 
 
 
-async function fetchdata(repo_url)
-{
-    try
-    {
-    
-        var urldata = gitUrlParse(repo_url)
-        let path = ""
-        if (urldata.filepath) {
-         
-                path = urldata.filepath
-   
-          
-        }
-        const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-            owner: urldata.owner,
-            repo: urldata.name,
-            path:path
-        })
+async function fetchdata(repo_url) {
+  try {
 
-        return data
-        
+    var urldata = gitUrlParse(repo_url)
+    let path = ""
+    if (urldata.filepath) {
+
+      path = urldata.filepath
+
+
     }
-    catch (e)
-    {
-        throw repo_url+ " its not  valid github url"
-        
-        }
+    const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: urldata.owner,
+      repo: urldata.name,
+      path: path
+    })
+
+    return data
+
+  }
+  catch (e) {
+    console.log(e.message)
+    throw repo_url + " its not  valid github url"
+
+  }
 }
 
 
-async function makezip(zip,part)
-{
-  for (const p of part)
-  {
+async function makezip(zip, part) {
+  for (const p of part) {
 
-    if (p.type === "file")
-    {
-      var filedata= await fetchdata(p.html_url)
+    if (p.type === "file") {
+      var filedata = await fetchdata(p.html_url)
       let decoded = Buffer.from(filedata.content, 'base64')
       zip.file(p.name, decoded);
     }
-    else
-    {
+    else {
       var newfolder = zip.folder(p.name);
       var folderdata = await fetchdata(p.html_url)
       console.log(folderdata)
-      await makezip(newfolder,folderdata)
+      await makezip(newfolder, folderdata)
     }
 
-    }
+  }
 }
 
 //this function delete a github repositorie with his link
-async function deleterepo(ctx,repo_url)
-{
+async function deleterepo(ctx, repo_url) {
   const octokit = new Octokit({
 
-    auth:ctx.session.token
-  
+    auth: ctx.session.token
+
   })
 
 
   var owner
   var repo
-  try
-  {
+  try {
     var urldata = gh(repo_url);
     owner = urldata.owner
-    repo=urldata.repo
+    repo = urldata.repo
 
-  return data
+    return data
   }
-  catch (e)
-  {
+  catch (e) {
     const userdata = (await octokit.request('GET /user', {}))
     owner = userdata.data.login
-    repo=repo_url
+    repo = repo_url
 
-  
+
   }
-   await octokit.request('DELETE /repos/{owner}/{repo}', {
+  await octokit.request('DELETE /repos/{owner}/{repo}', {
     owner: owner,
     repo: repo,
-   }).then(res => {
-       ctx.reply("repository has been deleted")
-       
-  }).catch(err =>
-  {
+  }).then(res => {
+    ctx.reply("repository has been deleted")
+
+  }).catch(err => {
     if (err.status === 404)
       ctx.reply("not found")
     else if (err.status === 403)
-       ctx.reply("not authorized")
-    })
+      ctx.reply("not authorized")
+  })
 
 }
 
 
 //not available now
-async function createrepo(ctx,name)
-{
-  try
-  {
-   
-const octokit2 = new Octokit({
-  auth: ctx.session.token
-})
+async function createrepo(ctx, name) {
+  try {
 
- await octokit2.rest.repos.createForAuthenticatedUser({
-      
-   name: name,
-   description: '',
-   homepage: 'https://github.com',
-   'private': false,
-   is_template: true,
- }).catch(err => { 
-   if (err.status == 422)
-   ctx.reply("the repository already exists",
-   {
-reply_to_message_id: ctx.message.message_id
-})
-  })
-   .then(repo => {
-     ctx.reply("repository created successfuly",
-       {
-    reply_to_message_id: ctx.message.message_id
-  }) });
+    const octokit2 = new Octokit({
+      auth: ctx.session.token
+    })
+
+    await octokit2.rest.repos.createForAuthenticatedUser({
+
+      name: name,
+      description: '',
+      homepage: 'https://github.com',
+      'private': false,
+      is_template: true,
+    }).catch(err => {
+      if (err.status == 422)
+        ctx.reply("the repository already exists",
+          {
+            reply_to_message_id: ctx.message.message_id
+          })
+    })
+      .then(repo => {
+        ctx.reply("repository created successfuly",
+          {
+            reply_to_message_id: ctx.message.message_id
+          })
+      });
 
   }
-  catch (e)
-  {
-      throw " cannot create a new repository" + e.message
-      
-      }
+  catch (e) {
+    throw " cannot create a new repository" + e.message
+
+  }
 }
 
 
-async function following(ctx,username)
-{
+async function following(ctx, username) {
 
- await octokit.request('GET /users/{username}/following', { username: username }).then(res =>
-    {
-      ctx.reply(`people followed by ${username}` )
-      var return_text=""
-      res.data.forEach(async(f) => {
-      return_text+=`${f.login} \n`
-      })
-      ctx.reply(return_text)
+  await octokit.request('GET /users/{username}/following', { username: username }).then(res => {
+    ctx.reply(`people followed by ${username}`)
+    var return_text = ""
+    res.data.forEach(async (f) => {
+      return_text += `${f.login} \n`
     })
-    
+    ctx.reply(return_text)
+  })
+
 
 }
 
 
 
-async function followers(ctx,username)
-{
+async function followers(ctx, username) {
 
- await octokit.request('GET /users/{username}/followers', {username:username}).then(res =>
-        {
-          ctx.reply(`${username} followers`)
-          var return_text=""
-          res.data.forEach(async(f) => {
-          return_text+=`${f.login} \n`
-          })
-          ctx.reply(return_text)
-        })
+  await octokit.request('GET /users/{username}/followers', { username: username }).then(res => {
+    ctx.reply(`${username} followers`)
+    var return_text = ""
+    res.data.forEach(async (f) => {
+      return_text += `${f.login} \n`
+    })
+    ctx.reply(return_text)
+  })
 
 }
 
 
-async function connecteduserfollowing(ctx) 
-{
+async function connecteduserfollowing(ctx) {
   const octokit = new Octokit({
 
-    auth:ctx.session.token
-  
+    auth: ctx.session.token
+
   })
   await octokit.request('GET /user/following', {})
-  .then(res =>
-    {
+    .then(res => {
       ctx.reply("people followed you follow")
-      var return_text=""
-      res.data.forEach(async(f) => {
-      return_text+=`${f.login} \n`
+      var return_text = ""
+      res.data.forEach(async (f) => {
+        return_text += `${f.login} \n`
       })
       ctx.reply(return_text)
-  })
-    .catch(err =>
-    {
+    })
+    .catch(err => {
       if (res.status === 401)
-      ctx.reply("authentication required")
+        ctx.reply("authentication required")
     })
 
 }
 
 
 
-async function connecteduserfollowers(ctx)
-{
+async function connecteduserfollowers(ctx) {
   const octokit = new Octokit({
 
-    auth:ctx.session.token
-  
-  })
- 
-      const { data } = await octokit.request('GET /user/followers', {})  .then(res =>
-        {
-          
-          ctx.reply("your followers")
-          var return_text=""
-          res.data.forEach(async(f) => {
-          return_text+=`${f.login} \n`
-          })
-          ctx.reply(return_text)
-      })
-        .catch(err =>
-        {
-          if (res.status === 401)
-          ctx.reply("authentication required")
-        })
+    auth: ctx.session.token
 
-  
+  })
+
+  const { data } = await octokit.request('GET /user/followers', {}).then(res => {
+
+    ctx.reply("your followers")
+    var return_text = ""
+    res.data.forEach(async (f) => {
+      return_text += `${f.login} \n`
+    })
+    ctx.reply(return_text)
+  })
+    .catch(err => {
+      if (res.status === 401)
+        ctx.reply("authentication required")
+    })
+
+
 }
 
 
@@ -272,4 +250,4 @@ async function connecteduserfollowers(ctx)
 
 
 
-module.exports= { fetchdata,makezip,createrepo,deleterepo,followers,following,connecteduserfollowers,connecteduserfollowing}
+module.exports = { fetchdata, makezip, createrepo, deleterepo, followers, following, connecteduserfollowers, connecteduserfollowing }
