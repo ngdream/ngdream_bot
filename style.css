@@ -37,8 +37,7 @@ section {
     margin-top: 20px;
 }
 
-h1
-{
+h1 {
     font-size: 5rem;
     font-weight: bold;
 
@@ -48,7 +47,7 @@ h1
 p {
 
     border-radius: 100px;
-   
+
     font-size: 1.1rem;
     color: white;
     text-align: justify;
@@ -59,7 +58,7 @@ header {
     display: flex;
     height: 100vh;
     justify-content: space-between;
-    align-items: center;
+
     background-color: #0c0016;
     padding: 50px;
     border-bottom: 5px solid #6be6ff;
@@ -104,28 +103,25 @@ a {
     color: #000;
     font-weight: bold;
     filter: drop-shadow(rgba(255, 215, 77, 1) -1px -1px 2px) drop-shadow(rgba(124, 127, 255, 1) 1px 1px 2px);
-    
+
 }
 
-.btn .custom
-{
+.btn .custom {
     clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
-    padding:10px 18px ;
-     display: inline-block;
-     -webkit-font-smoothing: antialiased;
-     -moz-osx-font-smoothing: grayscale;
-     text-transform: uppercase;
-     scroll-behavior: smooth;
-     width: 100%;
-     text-align: center;
-     background: linear-gradient(90deg, rgb(255, 215, 77) 0%, rgb(64, 221, 255) 30%, rgb(124, 127, 255) 85%) 0% 0% / 200% 100%;
+    padding: 10px 18px;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-transform: uppercase;
+    scroll-behavior: smooth;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(90deg, rgb(255, 215, 77) 0%, rgb(64, 221, 255) 30%, rgb(124, 127, 255) 85%) 0% 0% / 200% 100%;
 }
 
 
 .profil {
-
-    margin: 100 auto;
-
+    max-height: 500px;
 }
 
 
@@ -164,8 +160,8 @@ section>section {
         flex-direction: column;
         justify-content: center;
     }
-    .profil
-    {
+
+    .profil {
 
         width: 100px;
         margin: 0;
